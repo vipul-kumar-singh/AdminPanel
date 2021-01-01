@@ -1,36 +1,20 @@
 package com.vkstech.adminpanel;
 
-import com.vkstech.adminpanel.annotation.EnableAdmin;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
-
-import java.util.Set;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class AdminPanelApplication implements CommandLineRunner {
+public class AdminPanelApplication extends SpringBootServletInitializer {
 
-    private static final ClassLoader classLoader = EnableAdmin.class.getClassLoader();
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(AdminPanelApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(AdminPanelApplication.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-
-        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-        provider.addIncludeFilter(new AnnotationTypeFilter(EnableAdmin.class));
-
-
-        /** basePackage = blank - searches for all packages, and thus is relatively slow
-         *  It is recommended to use your model directory to make this scanning faster
-         */
-        final Set<BeanDefinition> candidates = provider.findCandidateComponents("");
-
-        candidates.forEach(candidate -> System.out.println(candidate.getBeanClassName()));
-    }
 }
